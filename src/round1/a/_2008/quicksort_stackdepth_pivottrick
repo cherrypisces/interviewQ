@@ -1,0 +1,38 @@
+https://community.oracle.com/thread/1661642?tstart=0
+
+
+The real reason that you blow out the stack is because you have too many subproblems on the stack. Yes this was partially caused by choice of a bad pivot, but that can happen regardless of the method of choice of the pivot.
+
+The stack blow up problem occurs when you defer the short problem and tackle the long problem first. So if you have an N long array. and by bad choice of pivot you split into a 1 long problem and an N-1 long problem. If you did the 1 long problem first, you would be done with it and back to the N-1 problem without making the stact too deep.
+
+However if you hang onto the 1 long sub problem and wade into the N-1 long problem first, you could just make the same mistake again and again, carving off a 1 long problem, pushing it onto the stack and wading into the big problem.
+
+In it's worst case, Not only is the runtime N*N but the depth of the stack was N.
+
+On the other hand, if you always do the smallest subproblem first. The smallest problem MUST be less that half the size of the array you started with (a perfect split would be exactly half the size) and as a result the stack depth is BOUNDED by the log base 2 of the original array size.
+
+The reason that they smack you with this problem in school is because they want you to learn that this is ALWAYS the case for recursive problems, namely you will be less consumptive of the stack if you can arrange your recursion to solve the smallest subproblem first.
+
+So choice of piviot is very important. In practice this will solve your problem from a probablilistic standpoint but it does NOT make the problem impossible and if I were grading your papers, I would not give you full credit if you discovered the pivot trick but did not discover the rearrangement of subproblems trick.
+
+This important consideration has been listed in every presentation of quicksort in algorithm texts at least since Sedgwick if not in Knuth.
+
+Sedgwick's non-recursive qsort
+  void qSort(Comparable[] foo){ // from Sedgwick's Algorithms
+    int[] a = new int[50];
+    int l = 0; int r = foo.length; int p = 2;
+    while(p != 0){
+      if(r>l){
+        int i = partition(foo,l,r); // finds pivot and moves elts
+        // now we have two sub problems - push the long one
+        if((i-l)>(r-i)){
+          a[p] = l; a[p+1] = i-1; l = i+1;
+        } else {
+          a[p] = i+1; a[p+1] = r; r = i-1;
+        }
+        p += 2;
+      } else { // finished so do a subproblem
+        p -= 2; l = a[p]; r = a[p+1];
+      }
+    }
+  }

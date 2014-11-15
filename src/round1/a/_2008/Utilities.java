@@ -1,4 +1,4 @@
-package my.common.utils;
+package round1.a._2008;
 
 import java.util.Random;
 
@@ -46,10 +46,4 @@ public class Utilities {
 		System.out.println();
 	}
 	
-	public static void printArray2(double[] array) {
-		for(int i=0; i<array.length; i++) {
-				System.out.print(" " + String.format("%.5",array[i]));
-			}
-		System.out.println();
-	}
 }
